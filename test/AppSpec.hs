@@ -12,22 +12,30 @@ import           Test.Hspec
 
 import           App hiding (getItems)
 
-getItems :: ClientM [Item]
-getItem :: Integer -> ClientM Item
-getItems :<|> getItem = client itemApi
+-- getItems :: ClientM [Item]
+-- getItem :: Integer -> ClientM Item
+-- thing' :<|> getItems :<|> getItem = client itemApi
+thing' :<|> _  = client itemApi
+
+
+
 
 spec :: Spec
 spec = do
   describe "/item" $ do
     withClient mkApp $ do
-      it "lists an example item" $ \ env -> do
-        try env getItems `shouldReturn` [Item 0 "example item"]
+      it "Something" $ \ env -> do
+        let (activateContract :<|> _) = client someApi
+        try env (activateContract 5) `shouldReturn` 55
 
-      it "allows to show items by id" $ \ env -> do
-        try env (getItem 0) `shouldReturn` Item 0 "example item"
+      -- it "lists an example item" $ \ env -> do
+      --   try env getItems `shouldReturn` [Item 0 "example item"]
 
-      it "throws a 404 for missing items" $ \ env -> do
-        try env (getItem 42) `shouldThrow` errorsWithStatus notFound404
+      -- it "allows to show items by id" $ \ env -> do
+      --   try env (getItem 0) `shouldReturn` Item 0 "example item"
+
+      -- it "throws a 404 for missing items" $ \ env -> do
+      --   try env (getItem 42) `shouldThrow` errorsWithStatus notFound404
 
 errorsWithStatus :: Status -> ClientError -> Bool
 errorsWithStatus status servantError = case servantError of
